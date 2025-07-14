@@ -51,9 +51,6 @@ CREATE TABLE public.tab_administrative_public_servant (
                                                           affiliation_id uuid NOT NULL
 );
 
-
-ALTER TABLE public.tab_administrative_public_servant OWNER TO admin;
-
 --
 -- TOC entry 218 (class 1259 OID 36525)
 -- Name: tab_affiliation; Type: TABLE; Schema: public; Owner: admin
@@ -69,9 +66,6 @@ CREATE TABLE public.tab_affiliation (
                                         CONSTRAINT tab_affiliation_status_check CHECK (((status)::text = ANY ((ARRAY['CREATED'::character varying, 'ACTIVE'::character varying, 'SUSPENDED'::character varying, 'FINISHED'::character varying])::text[])))
 );
 
-
-ALTER TABLE public.tab_affiliation OWNER TO admin;
-
 --
 -- TOC entry 220 (class 1259 OID 36532)
 -- Name: tab_building; Type: TABLE; Schema: public; Owner: admin
@@ -83,9 +77,6 @@ CREATE TABLE public.tab_building (
                                      code character varying(255),
                                      CONSTRAINT tab_building_type_check CHECK (((type >= 0) AND (type <= 4)))
 );
-
-
-ALTER TABLE public.tab_building OWNER TO admin;
 
 --
 -- TOC entry 219 (class 1259 OID 36531)
@@ -114,9 +105,6 @@ CREATE TABLE public.tab_classroom (
                                       CONSTRAINT tab_classroom_status_check CHECK (((status >= 0) AND (status <= 3)))
 );
 
-
-ALTER TABLE public.tab_classroom OWNER TO admin;
-
 --
 -- TOC entry 222 (class 1259 OID 36544)
 -- Name: tab_computer_laboratory; Type: TABLE; Schema: public; Owner: admin
@@ -128,9 +116,6 @@ CREATE TABLE public.tab_computer_laboratory (
                                                 code character varying(255),
                                                 CONSTRAINT tab_computer_laboratory_status_check CHECK (((status >= 0) AND (status <= 3)))
 );
-
-
-ALTER TABLE public.tab_computer_laboratory OWNER TO admin;
 
 --
 -- TOC entry 223 (class 1259 OID 36550)
@@ -147,9 +132,6 @@ CREATE TABLE public.tab_course (
                                    CONSTRAINT tab_course_type_check CHECK (((type)::text = ANY ((ARRAY['BACHELOR'::character varying, 'LICENTIATE'::character varying, 'SUBSEQUENT'::character varying, 'INTEGRATED'::character varying, 'MASTER'::character varying, 'DOCTORATE'::character varying, 'POSTGRADUATE'::character varying, 'EXTENSION'::character varying, 'SPECIALIZATION'::character varying, 'TECHNICAL'::character varying])::text[])))
 );
 
-
-ALTER TABLE public.tab_course OWNER TO admin;
-
 --
 -- TOC entry 224 (class 1259 OID 36558)
 -- Name: tab_course_calendar; Type: TABLE; Schema: public; Owner: admin
@@ -159,9 +141,6 @@ CREATE TABLE public.tab_course_calendar (
                                             id uuid NOT NULL,
                                             title character varying(255)
 );
-
-
-ALTER TABLE public.tab_course_calendar OWNER TO admin;
 
 --
 -- TOC entry 225 (class 1259 OID 36563)
@@ -173,9 +152,6 @@ CREATE TABLE public.tab_course_has_subject (
                                                subjects_id uuid NOT NULL
 );
 
-
-ALTER TABLE public.tab_course_has_subject OWNER TO admin;
-
 --
 -- TOC entry 226 (class 1259 OID 36568)
 -- Name: tab_department; Type: TABLE; Schema: public; Owner: admin
@@ -186,9 +162,6 @@ CREATE TABLE public.tab_department (
                                        code character varying(255) NOT NULL,
                                        name character varying(255) NOT NULL
 );
-
-
-ALTER TABLE public.tab_department OWNER TO admin;
 
 --
 -- TOC entry 227 (class 1259 OID 36577)
@@ -207,9 +180,6 @@ CREATE TABLE public.tab_group (
     CONSTRAINT tab_group_status_check CHECK (((status)::text = ANY ((ARRAY['OPEN'::character varying, 'ACTIVE'::character varying, 'CLOSED'::character varying])::text[])))
 );
 
-
-ALTER TABLE public.tab_group OWNER TO admin;
-
 --
 -- TOC entry 228 (class 1259 OID 36586)
 -- Name: tab_group_has_professor; Type: TABLE; Schema: public; Owner: admin
@@ -219,9 +189,6 @@ CREATE TABLE public.tab_group_has_professor (
                                                 group_id uuid NOT NULL,
                                                 professors_affiliation_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_group_has_professor OWNER TO admin;
 
 --
 -- TOC entry 229 (class 1259 OID 36591)
@@ -233,9 +200,6 @@ CREATE TABLE public.tab_group_has_student (
                                               students_affiliation_id uuid NOT NULL
 );
 
-
-ALTER TABLE public.tab_group_has_student OWNER TO admin;
-
 --
 -- TOC entry 230 (class 1259 OID 36596)
 -- Name: tab_internal_room; Type: TABLE; Schema: public; Owner: admin
@@ -246,9 +210,6 @@ CREATE TABLE public.tab_internal_room (
                                           id uuid NOT NULL,
                                           observations character varying(255)
 );
-
-
-ALTER TABLE public.tab_internal_room OWNER TO admin;
 
 --
 -- TOC entry 231 (class 1259 OID 36601)
@@ -265,9 +226,6 @@ CREATE TABLE public.tab_lesson_reservation (
                                                CONSTRAINT tab_lesson_reservation_day_check CHECK (((day >= 0) AND (day <= 6)))
 );
 
-
-ALTER TABLE public.tab_lesson_reservation OWNER TO admin;
-
 --
 -- TOC entry 232 (class 1259 OID 36607)
 -- Name: tab_professor; Type: TABLE; Schema: public; Owner: admin
@@ -277,9 +235,6 @@ CREATE TABLE public.tab_professor (
                                       affiliation_id uuid NOT NULL,
                                       institutional_email character varying(255) NOT NULL
 );
-
-
-ALTER TABLE public.tab_professor OWNER TO admin;
 
 --
 -- TOC entry 233 (class 1259 OID 36614)
@@ -291,9 +246,6 @@ CREATE TABLE public.tab_professor_calendar (
                                                title character varying(255)
 );
 
-
-ALTER TABLE public.tab_professor_calendar OWNER TO admin;
-
 --
 -- TOC entry 234 (class 1259 OID 36619)
 -- Name: tab_professor_groups; Type: TABLE; Schema: public; Owner: admin
@@ -303,9 +255,6 @@ CREATE TABLE public.tab_professor_groups (
                                              groups_id uuid NOT NULL,
                                              professor_affiliation_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_professor_groups OWNER TO admin;
 
 --
 -- TOC entry 235 (class 1259 OID 36624)
@@ -320,9 +269,6 @@ CREATE TABLE public.tab_public_servant (
                                            CONSTRAINT tab_public_servant_education_level_check CHECK (((education_level)::text = ANY ((ARRAY['HIGH_SCHOOL'::character varying, 'TECHNICAL_CERTIFICATION'::character varying, 'ASSOCIATE'::character varying, 'BACHELOR_EDUCATION'::character varying, 'BACHELOR'::character varying, 'POSTGRADUATE'::character varying, 'MASTER'::character varying, 'DOCTORATE'::character varying, 'POST_DOCTORATE'::character varying])::text[])))
 );
 
-
-ALTER TABLE public.tab_public_servant OWNER TO admin;
-
 --
 -- TOC entry 236 (class 1259 OID 36634)
 -- Name: tab_public_servant_has_role; Type: TABLE; Schema: public; Owner: admin
@@ -332,9 +278,6 @@ CREATE TABLE public.tab_public_servant_has_role (
                                                     public_servant_role_id bigint NOT NULL,
                                                     public_servant_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_public_servant_has_role OWNER TO admin;
 
 --
 -- TOC entry 238 (class 1259 OID 36640)
@@ -346,9 +289,6 @@ CREATE TABLE public.tab_public_servant_role (
                                                 role character varying(255) NOT NULL,
                                                 CONSTRAINT tab_public_servant_role_role_check CHECK (((role)::text = 'COURSE_COORDINATOR'::text))
 );
-
-
-ALTER TABLE public.tab_public_servant_role OWNER TO admin;
 
 --
 -- TOC entry 237 (class 1259 OID 36639)
@@ -377,9 +317,6 @@ CREATE TABLE public.tab_student (
                                     institutional_email character varying(255) NOT NULL
 );
 
-
-ALTER TABLE public.tab_student OWNER TO admin;
-
 --
 -- TOC entry 240 (class 1259 OID 36659)
 -- Name: tab_student_calendar; Type: TABLE; Schema: public; Owner: admin
@@ -390,9 +327,6 @@ CREATE TABLE public.tab_student_calendar (
                                              title character varying(255)
 );
 
-
-ALTER TABLE public.tab_student_calendar OWNER TO admin;
-
 --
 -- TOC entry 241 (class 1259 OID 36664)
 -- Name: tab_student_groups; Type: TABLE; Schema: public; Owner: admin
@@ -402,9 +336,6 @@ CREATE TABLE public.tab_student_groups (
                                            groups_id uuid NOT NULL,
                                            student_affiliation_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_student_groups OWNER TO admin;
 
 --
 -- TOC entry 242 (class 1259 OID 36669)
@@ -419,9 +350,6 @@ CREATE TABLE public.tab_subject (
                                     title character varying(255)
 );
 
-
-ALTER TABLE public.tab_subject OWNER TO admin;
-
 --
 -- TOC entry 243 (class 1259 OID 36676)
 -- Name: tab_subject_courses; Type: TABLE; Schema: public; Owner: admin
@@ -431,9 +359,6 @@ CREATE TABLE public.tab_subject_courses (
                                             courses_id uuid NOT NULL,
                                             subject_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_subject_courses OWNER TO admin;
 
 --
 -- TOC entry 244 (class 1259 OID 36681)
@@ -452,9 +377,6 @@ CREATE TABLE public.tab_user (
                                  username character varying(255) NOT NULL
 );
 
-
-ALTER TABLE public.tab_user OWNER TO admin;
-
 --
 -- TOC entry 245 (class 1259 OID 36694)
 -- Name: tab_user_has_role; Type: TABLE; Schema: public; Owner: admin
@@ -464,9 +386,6 @@ CREATE TABLE public.tab_user_has_role (
                                           user_role_id integer NOT NULL,
                                           user_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.tab_user_has_role OWNER TO admin;
 
 --
 -- TOC entry 246 (class 1259 OID 36699)
@@ -478,9 +397,6 @@ CREATE TABLE public.tab_user_role (
                                       role character varying(255) NOT NULL,
                                       CONSTRAINT tab_user_role_role_check CHECK (((role)::text = ANY ((ARRAY['ADMIN'::character varying, 'USER'::character varying])::text[])))
 );
-
-
-ALTER TABLE public.tab_user_role OWNER TO admin;
 
 --
 -- TOC entry 3580 (class 0 OID 36520)
