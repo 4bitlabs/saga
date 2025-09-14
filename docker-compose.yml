@@ -1,4 +1,21 @@
 services:
+  sighas-be-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+    container_name: sighas-be-app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - sighas-be-network
+
   database:
     image: postgres:latest
     container_name: sighas-database
@@ -12,20 +29,6 @@ services:
     networks:
       - sighas-be-network
 
-  app:
-    build: .
-    container_name: sighas-be
-    ports:
-      - "8080:8080"
-    depends_on:
-      - database
-    environment:
-      - DATABASE_URL=jdbc:postgresql://sighas-database:5432/sighas
-      - DATABASE_USERNAME=admin
-      - DATABASE_PASSWORD=admin
-    networks:
-      - sighas-be-network
-
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -35,6 +38,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
       - "8081:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
 
 networks:
   sighas-be-network:

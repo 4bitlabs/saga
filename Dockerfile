@@ -1,15 +1,14 @@
-#Building project
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+FROM --platform=$BUILDPLATFORM maven:3.9.6-eclipse-temurin-21-jammy AS build
 
-WORKDIR /opt/sighas-be
 COPY . .
-RUN mvn clean package -Dmaven.test.skip=true
+RUN mvn clean install -DskipTests
 
-#Running project with JDK 21
-FROM eclipse-temurin:21
+FROM --platform=$TARGETPLATFORM eclipse-temurin:21-jre-jammy
+
+WORKDIR /app
 
 EXPOSE 8080
 
-WORKDIR /opt/sighas-be
-COPY --from=build /opt/sighas-be/target/sighas-be-1.0.0v.jar app.jar
-ENTRYPOINT ["java", "-jar", "/opt/sighas-be/app.jar"]
+COPY --from=build /target/sighas-be-1.0.0v.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
