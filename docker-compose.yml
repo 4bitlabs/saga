@@ -1,46 +1,38 @@
+name: sighas-api
 services:
-  sighas-be-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      platforms:
-        - "linux/amd64"
-        - "linux/arm64"
-    container_name: sighas-be-app
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    depends_on:
-      - database
-    networks:
-      - sighas-be-network
-
-  database:
-    image: postgres:latest
+  rdbms:
+    image: postgres:17.6
     container_name: sighas-database
     restart: always
     environment:
-      - POSTGRES_DB=sighas
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+      POSTGRES_DB: ${DB_NAME:-sighas}
     ports:
-      - "5432:5432"
-    networks:
-      - sighas-be-network
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@pgadmin.org"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
-    ports:
-      - "8081:80"
+      - '5432:5432'
     volumes:
-      - ./pgadmin_data:/var/lib/pgadmin
+      - type: volume
+        source: sighas-database-volume
+        target: /var/lib/postgresql/data
+    networks:
+      - sighas-network
+  app:
+    build: .
+    container_name: sighas-api
+    depends_on:
+      - rdbms
+    environment:
+      DB_HOST: rdbms
+      DB_NAME: sighas
+      DB_USERNAME: admin
+      DB_PASSWORD: admin
+    ports:
+      - '8080:8080'
+    networks:
+      - sighas-network
+volumes:
+  sighas-database-volume:
 
 networks:
-  sighas-be-network:
+  sighas-network:
     driver: bridge
