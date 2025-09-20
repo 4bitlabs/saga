@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.5</version>
+		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.4bitsolutions</groupId>
-	<artifactId>sighas-api</artifactId>
+	<groupId>br.com.cacadoresti</groupId>
+	<artifactId>saga</artifactId>
 	<version>1.0.0</version>
-	<name>SIGHAS API</name>
-	<description>Backend API for SIGHAS application</description>
+	<name>SAGA</name>
+	<description>Sistema Acadêmico de Gestão e Alocação</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -71,13 +71,13 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>6.6.0.Final</version>
+			<version>7.1.1.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.4</version>
+			<version>42.7.7</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
@@ -94,14 +94,11 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>11.0.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
-			<version>11.0.1</version>
-			<scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server -->
 		<dependency>
@@ -112,11 +109,6 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>me.paulschwarz</groupId>
-			<artifactId>spring-dotenv</artifactId>
-			<version>2.5.4</version>
 		</dependency>
 	</dependencies>
 
@@ -133,16 +125,7 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			
-			<!-- https://docs.spring.io/spring-boot/how-to/native-image/developing-your-first-application.html -->
-			<plugin>
-				<groupId>org.graalvm.buildtools</groupId>
-				<artifactId>native-maven-plugin</artifactId>
-				<configuration>
-                	<imageName>sighas</imageName>
-            	</configuration>
-			</plugin>
+			</plugin>	
 		</plugins>
 	</build>
 
