@@ -1,0 +1,8 @@
+#! 0-sighas-api-namespace.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: sighas-api
+    labels:
+        com.docker.compose.project: sighas-api

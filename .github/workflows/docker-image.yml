@@ -1,0 +1,102 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - 'pom.xml'
+      - '.github/workflows/docker-image.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - 'pom.xml'
+      - '.github/workflows/docker-image.yml'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Update Helm Chart values
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      run: |
+        # Verificar se o commit não é de atualização automática
+        if [[ "${{ github.event.head_commit.message }}" == *"chore: update image tag"* ]]; then
+          echo "Skipping update - this is an automated tag update commit"
+          exit 0
+        fi
+        
+        # Extrair a tag mais recente (primeira tag sem ser latest)
+        LATEST_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep -v 'latest' | head -n1 | sed 's/ghcr.io\/.*://')
+        
+        # Verificar se a tag mudou
+        CURRENT_TAG=$(grep 'tag:' helm/saga-chart/values.yaml | sed 's/.*tag: "\(.*\)".*/\1/')
+        
+        if [ "$LATEST_TAG" != "$CURRENT_TAG" ]; then
+          # Atualizar o values.yaml do Helm chart
+          sed -i "s/tag: \".*\"/tag: \"$LATEST_TAG\"/" helm/saga-chart/values.yaml
+          
+          # Commit e push das mudanças
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add helm/saga-chart/values.yaml
+          git commit -m "chore: update image tag to $LATEST_TAG"
+          git push
+        else
+          echo "Tag já está atualizada: $CURRENT_TAG"
+        fi
+
+    - name: Notify deployment
+      if: github.event_name != 'pull_request'
+      run: |
+        echo "🚀 Docker image built and pushed successfully!"
+        echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+        echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
+        echo "🔗 GitHub Container Registry: https://github.com/${{ github.repository }}/pkgs/container/$(echo ${{ env.IMAGE_NAME }} | cut -d'/' -f2)"
