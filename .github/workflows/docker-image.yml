@@ -75,9 +75,9 @@ jobs:
         
         # Extrair as tags geradas
         ALL_TAGS="${{ steps.meta.outputs.tags }}"
-        DEV_TAG=$(echo "$ALL_TAGS" | grep "dev-latest" | sed 's/ghcr.io\/.*://')
-        PROD_TAG=$(echo "$ALL_TAGS" | grep "prod-latest" | sed 's/ghcr.io\/.*://')
-        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -v "latest" | head -n1 | sed 's/ghcr.io\/.*://')
+        DEV_TAG=$(echo "$ALL_TAGS" | grep "dev-latest" | sed 's/ghcr.io\/4bitlabs\/saga://')
+        PROD_TAG=$(echo "$ALL_TAGS" | grep "prod-latest" | sed 's/ghcr.io\/4bitlabs\/saga://')
+        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -v "latest" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
         
         echo "Generated tags: $ALL_TAGS"
         echo "Dev tag: $DEV_TAG"

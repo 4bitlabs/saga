@@ -7,7 +7,7 @@ app:
   debug: true
   
   image:
-    repository: "ghcr.io/cacadoresti/saga-api"
+    repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: Always
     tag: "dev-latest"
   
@@ -56,7 +56,7 @@ database:
 migration:
   enabled: true
   image:
-    repository: "ghcr.io/cacadoresti/saga-api"
+    repository: "ghcr.io/4bitlabs/saga"
     tag: "dev-latest"
   annotations:
     argocd.argoproj.io/sync-wave: "1"

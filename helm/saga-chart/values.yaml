@@ -10,9 +10,9 @@ app:
   debug: false
   
   image:
-    repository: "ghcr.io/cacadoresti/saga-api"
+    repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: IfNotPresent
-    tag: "cursor-helm-actions"
+    tag: "latest"
   
   service:
     type: ClusterIP
@@ -59,7 +59,7 @@ database:
 migration:
   enabled: true
   image:
-    repository: "ghcr.io/cacadoresti/saga-api"
-    tag: "cursor-helm-actions"
+    repository: "ghcr.io/4bitlabs/saga"
+    tag: "latest"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
