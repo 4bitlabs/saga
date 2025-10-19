@@ -1,0 +1,31 @@
+{{- if .Values.database.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "saga-chart.fullname" . }}-postgres
+  labels:
+    {{- include "saga-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  instances: 1
+  
+  postgresql:
+    parameters:
+      max_connections: "200"
+  
+  bootstrap:
+    initdb:
+      database: {{ .Values.database.name }}
+      owner: {{ .Values.database.username }}
+      secret:
+        name: {{ include "saga-chart.fullname" . }}-db-secret
+  
+  storage:
+    size: {{ .Values.database.storageSize }}
+    storageClass: ""
+  
+  resources:
+    {{- toYaml .Values.database.resources | nindent 4 }}
+{{- end }}

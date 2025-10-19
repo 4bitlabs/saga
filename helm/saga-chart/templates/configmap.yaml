@@ -17,7 +17,7 @@ data:
     
     # JPA/Hibernate Configuration
     spring.jpa.hibernate.ddl-auto=validate
-    spring.jpa.show-sql={{ .Values.app.debug | lower }}
+    spring.jpa.show-sql={{ .Values.app.debug }}
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.properties.hibernate.format_sql=true
     

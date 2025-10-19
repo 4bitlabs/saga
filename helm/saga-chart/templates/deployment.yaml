@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "saga-chart.labels" . | nindent 4 }}
     app.kubernetes.io/component: application
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: {{ .Values.app.replicaCount }}
   selector:

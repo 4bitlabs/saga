@@ -1,18 +1,15 @@
-# Default values for saga-chart
-# This is a YAML-formatted file.
-
-# Application Configuration
+# Production Environment Configuration
 app:
   name: "saga-api"
   packageName: "cacadores.ifal.sighas"
-  replicaCount: 1
+  replicaCount: 3
   springProfile: "prod"
   debug: false
   
   image:
     repository: "ghcr.io/cacadoresti/saga-api"
     pullPolicy: IfNotPresent
-    tag: "latest"
+    tag: "v1.0.0"
   
   service:
     type: ClusterIP
@@ -37,29 +34,29 @@ app:
   podSecurityContext:
     fsGroup: 1000
 
-# Database Configuration
+# Database Configuration for Production
 database:
   enabled: true
-  host: "saga-chart-postgres"
+  host: "saga-api-prod-postgres"
   port: 5432
-  name: "sighas"
+  name: "sighas_prod"
   username: "admin"
-  password: "admin"
+  password: "prod_secret_password_2024"
   postgresVersion: "17.6"
-  storageSize: "10Gi"
+  storageSize: "50Gi"
   resources:
     limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
       cpu: 500m
       memory: 512Mi
-    requests:
-      cpu: 250m
-      memory: 256Mi
 
 # Migration Job Configuration
 migration:
   enabled: true
   image:
     repository: "ghcr.io/cacadoresti/saga-api"
-    tag: "latest"
+    tag: "v1.0.0"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
