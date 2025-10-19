@@ -24,7 +24,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -107,7 +107,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git add helm/saga-chart/values*.yaml
         git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
-        git push
+        git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
     - name: Notify deployment
       if: github.event_name != 'pull_request'
