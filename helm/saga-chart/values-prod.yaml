@@ -9,7 +9,7 @@ app:
   image:
     repository: "ghcr.io/cacadoresti/saga-api"
     pullPolicy: IfNotPresent
-    tag: "v1.0.0"
+    tag: "prod-latest"
   
   service:
     type: ClusterIP
@@ -57,6 +57,6 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/cacadoresti/saga-api"
-    tag: "v1.0.0"
+    tag: "prod-latest"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
