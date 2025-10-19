@@ -63,6 +63,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        provenance: false
 
     - name: Update Helm Chart values
       if: github.event_name != 'pull_request'
@@ -108,6 +109,23 @@ jobs:
         git add helm/saga-chart/values*.yaml
         git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
         git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+    - name: Make package public
+      if: github.event_name != 'pull_request'
+      run: |
+        # Tornar o pacote público no GHCR
+        PACKAGE_NAME=$(echo "${{ env.IMAGE_NAME }}" | cut -d'/' -f2)
+        echo "Making package $PACKAGE_NAME public..."
+        
+        # Usar a API do GitHub para tornar o pacote público
+        curl -X PATCH \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "https://api.github.com/orgs/4bitlabs/packages/container/$PACKAGE_NAME" \
+          -d '{"visibility":"public"}'
+        
+        echo "Package $PACKAGE_NAME is now public!"
 
     - name: Notify deployment
       if: github.event_name != 'pull_request'
