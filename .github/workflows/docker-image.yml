@@ -103,12 +103,19 @@ jobs:
           echo "Updated values.yaml with tag: $BRANCH_TAG"
         fi
         
-        # Commit e push das mudanças
+        # Commit e push das mudanças (apenas se houver mudanças)
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add helm/saga-chart/values*.yaml
-        git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
-        git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        
+        # Verificar se há mudanças para commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit - tags are already up to date"
+        else
+          git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
+          git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          echo "Changes committed and pushed successfully"
+        fi
 
     - name: Make package public
       if: github.event_name != 'pull_request'
