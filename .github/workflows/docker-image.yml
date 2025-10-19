@@ -50,8 +50,8 @@ jobs:
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
-          type=raw,value=dev-latest,enable={{is_default_branch}}
-          type=raw,value=prod-latest,enable={{is_default_branch}}
+          type=raw,value=dev-latest
+          type=raw,value=prod-latest
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -65,7 +65,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Update Helm Chart values
-      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      if: github.event_name != 'pull_request'
       run: |
         # Verificar se o commit não é de atualização automática
         if [[ "${{ github.event.head_commit.message }}" == *"chore: update image tag"* ]]; then
