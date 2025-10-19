@@ -48,10 +48,10 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
           type=ref,event=branch
           type=sha,prefix={{branch}}-
+          type=raw,value=dev-latest,enable={{is_default_branch}}
+          type=raw,value=prod-latest,enable={{is_default_branch}}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -73,25 +73,41 @@ jobs:
           exit 0
         fi
         
-        # Extrair a tag mais recente (primeira tag sem ser latest)
-        LATEST_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep -v 'latest' | head -n1 | sed 's/ghcr.io\/.*://')
+        # Extrair as tags geradas
+        ALL_TAGS="${{ steps.meta.outputs.tags }}"
+        DEV_TAG=$(echo "$ALL_TAGS" | grep "dev-latest" | sed 's/ghcr.io\/.*://')
+        PROD_TAG=$(echo "$ALL_TAGS" | grep "prod-latest" | sed 's/ghcr.io\/.*://')
+        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -v "latest" | head -n1 | sed 's/ghcr.io\/.*://')
         
-        # Verificar se a tag mudou
-        CURRENT_TAG=$(grep 'tag:' helm/saga-chart/values.yaml | sed 's/.*tag: "\(.*\)".*/\1/')
+        echo "Generated tags: $ALL_TAGS"
+        echo "Dev tag: $DEV_TAG"
+        echo "Prod tag: $PROD_TAG"
+        echo "Branch tag: $BRANCH_TAG"
         
-        if [ "$LATEST_TAG" != "$CURRENT_TAG" ]; then
-          # Atualizar o values.yaml do Helm chart
-          sed -i "s/tag: \".*\"/tag: \"$LATEST_TAG\"/" helm/saga-chart/values.yaml
-          
-          # Commit e push das mudanças
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add helm/saga-chart/values.yaml
-          git commit -m "chore: update image tag to $LATEST_TAG"
-          git push
-        else
-          echo "Tag já está atualizada: $CURRENT_TAG"
+        # Atualizar values-dev.yaml
+        if [ -n "$DEV_TAG" ]; then
+          sed -i "s/tag: \".*\"/tag: \"$DEV_TAG\"/" helm/saga-chart/values-dev.yaml
+          echo "Updated values-dev.yaml with tag: $DEV_TAG"
         fi
+        
+        # Atualizar values-prod.yaml
+        if [ -n "$PROD_TAG" ]; then
+          sed -i "s/tag: \".*\"/tag: \"$PROD_TAG\"/" helm/saga-chart/values-prod.yaml
+          echo "Updated values-prod.yaml with tag: $PROD_TAG"
+        fi
+        
+        # Atualizar values.yaml base
+        if [ -n "$BRANCH_TAG" ]; then
+          sed -i "s/tag: \".*\"/tag: \"$BRANCH_TAG\"/" helm/saga-chart/values.yaml
+          echo "Updated values.yaml with tag: $BRANCH_TAG"
+        fi
+        
+        # Commit e push das mudanças
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add helm/saga-chart/values*.yaml
+        git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
+        git push
 
     - name: Notify deployment
       if: github.event_name != 'pull_request'
