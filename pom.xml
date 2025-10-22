@@ -8,7 +8,7 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.cacadoresti</groupId>
+	<groupId>br.com.4bitsolutions</groupId>
 	<artifactId>saga</artifactId>
 	<version>1.0.0</version>
 	<name>SAGA</name>
