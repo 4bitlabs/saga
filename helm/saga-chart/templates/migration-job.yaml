@@ -21,7 +21,7 @@ spec:
           image: "{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           command: ["java"]
-          args: 
+          args:
             - "-jar"
             - "app.jar"
             - "--spring.profiles.active={{ .Values.app.springProfile }}"
