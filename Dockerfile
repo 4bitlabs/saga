@@ -2,17 +2,20 @@
 FROM bellsoft/liberica-openjdk-alpine:21 AS build
 WORKDIR /app
 
+# Instalar bash para compatibilidade
+RUN apk add --no-cache bash
+
 # Copiar os arquivos de configuração Maven
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
-RUN chmod +x ./mvnw
+RUN chmod +x ./mvnw && sed -i 's/\r$//' ./mvnw
 
 # Baixar dependências do projeto
-RUN ./mvnw dependency:go-offline
+RUN bash ./mvnw dependency:go-offline
 
 # Copiar o código-fonte e compilar
 COPY src/ src/
-RUN ./mvnw clean package -DskipTests
+RUN bash ./mvnw clean package -DskipTests
 
 # Etapa de execução
 FROM bellsoft/liberica-runtime-container:jre-21-musl

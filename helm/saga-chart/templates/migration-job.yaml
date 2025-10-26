@@ -1,0 +1,63 @@
+{{- if .Values.migration.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "saga-chart.fullname" . }}-migration
+  labels:
+    {{- include "saga-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migration
+  annotations:
+    {{- toYaml .Values.migration.annotations | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "saga-chart.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: "{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          command: ["java"]
+          args:
+            - "-jar"
+            - "app.jar"
+            - "--spring.profiles.active={{ .Values.app.springProfile }}"
+            - "--spring.flyway.migrate=true"
+          env:
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_NAME
+              value: {{ .Values.database.name }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.clusterName }}-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.clusterName }}-db-secret
+                  key: password
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.app.springProfile | quote }}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+      securityContext:
+        fsGroup: 1000
+  backoffLimit: 3
+{{- end }}
