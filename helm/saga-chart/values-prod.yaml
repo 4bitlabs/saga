@@ -37,7 +37,7 @@ app:
 # Database Configuration for Production
 database:
   enabled: true
-  host: "saga-api-prod-postgres"
+  host: "saga-api-prod-saga-chart-postgres-rw"
   port: 5432
   name: "sighas_prod"
   username: "admin"

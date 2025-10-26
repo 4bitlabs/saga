@@ -24,7 +24,7 @@ spec:
   
   storage:
     size: {{ .Values.database.storageSize }}
-    storageClass: ""
+    storageClass: "hostpath"
   
   resources:
     {{- toYaml .Values.database.resources | nindent 4 }}
