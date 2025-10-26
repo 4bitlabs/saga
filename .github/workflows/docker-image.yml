@@ -1,0 +1,126 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ main, master, develop, cursor-helm-actions ]
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - 'pom.xml'
+      - '.github/workflows/docker-image.yml'
+  pull_request:
+    branches: [ main, master, cursor-helm-actions ]
+    paths:
+      - 'src/**'
+      - 'Dockerfile'
+      - 'pom.xml'
+      - '.github/workflows/docker-image.yml'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        provenance: false
+    - name: Update Helm Chart values
+      if: github.event_name != 'pull_request'
+      run: |
+        # Aqui é só pra verificar se o commit não é de atualização automática, só por precaução mesmo, já que naturalmente esse workflow não observa modificações nos arquivos do folder helm
+        if [[ "${{ github.event.head_commit.message }}" == *"chore: update image tag"* ]]; then
+          echo "Skipping update - this is an automated tag update commit"
+          exit 0
+        fi
+        
+        # Extrair as tags geradas
+        ALL_TAGS="${{ steps.meta.outputs.tags }}"
+        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -E "^ghcr\.io/4bitlabs/saga:[a-zA-Z0-9-]+$" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
+        SHA_TAG=$(echo "$ALL_TAGS" | grep -E "^ghcr\.io/4bitlabs/saga:[a-zA-Z0-9-]+-[a-f0-9]+$" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
+        
+        echo "Generated tags: $ALL_TAGS"
+        echo "Branch tag: $BRANCH_TAG"
+        echo "SHA tag: $SHA_TAG"
+        
+        # Determinar qual arquivo values.yaml atualizar baseado na branch
+        CURRENT_BRANCH="${{ github.ref_name }}"
+        
+        if [ "$CURRENT_BRANCH" = "develop" ]; then
+          VALUES_FILE="helm/saga-chart/values-dev.yaml"
+          TAG_TO_USE="$SHA_TAG"
+        elif [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+          VALUES_FILE="helm/saga-chart/values-prod.yaml"
+          TAG_TO_USE="$SHA_TAG"
+        else
+          VALUES_FILE="helm/saga-chart/values.yaml"
+          TAG_TO_USE="$SHA_TAG"
+        fi
+        
+        echo "Updating $VALUES_FILE with tag: $TAG_TO_USE"
+        
+        # Atualizar o arquivo values.yaml correspondente
+        if [ -n "$TAG_TO_USE" ]; then
+          sed -i "s/tag: \".*\"/tag: \"$TAG_TO_USE\"/" "$VALUES_FILE"
+          echo "Updated $VALUES_FILE with tag: $TAG_TO_USE"
+        fi
+        
+        # Commit e push das mudanças (apenas se houver mudanças, pois tava disparando erro quando não tinha))
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add helm/saga-chart/values*.yaml
+        
+        # Verificar se há mudanças para commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit - tags are already up to date"
+        else
+          git commit -m "chore: update image tag to $TAG_TO_USE in $VALUES_FILE"
+          git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          echo "Changes committed and pushed successfully"
+        fi
+    - name: Notify deployment
+      if: github.event_name != 'pull_request'
+      run: |
+        echo "🚀 Docker image built and pushed successfully!"
+        echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+        echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
+        echo "🔗 GitHub Container Registry: https://github.com/${{ github.repository }}/pkgs/container/$(echo ${{ env.IMAGE_NAME }} | cut -d'/' -f2)"
+
+

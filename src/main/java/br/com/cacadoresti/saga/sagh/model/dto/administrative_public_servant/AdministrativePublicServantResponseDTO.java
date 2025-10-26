@@ -11,3 +11,5 @@ public record AdministrativePublicServantResponseDTO(
         UUID userId,
         String name
 ) implements ConcreteAffiliationResponseDTO {}
+
+// test

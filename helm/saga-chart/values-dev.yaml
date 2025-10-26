@@ -1,0 +1,63 @@
+# Development Environment Configuration
+app:
+  name: "saga-api"
+  packageName: "cacadores.ifal.sighas"
+  replicaCount: 1
+  springProfile: "dev"
+  debug: true
+  
+  image:
+    repository: "ghcr.io/4bitlabs/saga"
+    pullPolicy: Always
+    tag: "dev-latest"
+  
+  service:
+    type: ClusterIP
+    port: 80
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  
+  podSecurityContext:
+    fsGroup: 1000
+
+# Database Configuration for Development
+database:
+  enabled: true
+  clusterName: "saga-chart-dev-postgres"
+  host: "saga-chart-dev-postgres-rw"
+  port: 5432
+  name: "sighas_dev"
+  username: "admin"
+  password: "admin123"
+  postgresVersion: "17.6"
+  storageSize: "5Gi"
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 125m
+      memory: 128Mi
+
+# Migration Job Configuration
+migration:
+  enabled: true
+  image:
+    repository: "ghcr.io/4bitlabs/saga"
+    tag: "dev-latest"
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
