@@ -41,7 +41,7 @@ database:
   port: 5432
   name: "sighas_prod"
   username: "admin"
-  password: "prod_secret_password_2024"
+  password: "best_possible_password_xd"
   postgresVersion: "17.6"
   storageSize: "50Gi"
   resources:

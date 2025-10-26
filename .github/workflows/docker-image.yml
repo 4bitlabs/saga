@@ -64,7 +64,6 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         provenance: false
-
     - name: Update Helm Chart values
       if: github.event_name != 'pull_request'
       run: |
@@ -116,7 +115,6 @@ jobs:
           git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           echo "Changes committed and pushed successfully"
         fi
-
     - name: Make package public
       if: github.event_name != 'pull_request'
       run: |
@@ -141,3 +139,5 @@ jobs:
         echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
         echo "🔗 GitHub Container Registry: https://github.com/${{ github.repository }}/pkgs/container/$(echo ${{ env.IMAGE_NAME }} | cut -d'/' -f2)"
+
+
