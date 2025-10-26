@@ -50,8 +50,6 @@ jobs:
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
-          type=raw,value=dev-latest
-          type=raw,value=prod-latest
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -67,7 +65,7 @@ jobs:
     - name: Update Helm Chart values
       if: github.event_name != 'pull_request'
       run: |
-        # Verificar se o commit não é de atualização automática
+        # Aqui é só pra verificar se o commit não é de atualização automática, só por precaução mesmo, já que naturalmente esse workflow não observa modificações nos arquivos do folder helm
         if [[ "${{ github.event.head_commit.message }}" == *"chore: update image tag"* ]]; then
           echo "Skipping update - this is an automated tag update commit"
           exit 0
@@ -75,34 +73,36 @@ jobs:
         
         # Extrair as tags geradas
         ALL_TAGS="${{ steps.meta.outputs.tags }}"
-        DEV_TAG=$(echo "$ALL_TAGS" | grep "dev-latest" | sed 's/ghcr.io\/4bitlabs\/saga://')
-        PROD_TAG=$(echo "$ALL_TAGS" | grep "prod-latest" | sed 's/ghcr.io\/4bitlabs\/saga://')
-        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -v "latest" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
+        BRANCH_TAG=$(echo "$ALL_TAGS" | grep -E "^ghcr\.io/4bitlabs/saga:[a-zA-Z0-9-]+$" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
+        SHA_TAG=$(echo "$ALL_TAGS" | grep -E "^ghcr\.io/4bitlabs/saga:[a-zA-Z0-9-]+-[a-f0-9]+$" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
         
         echo "Generated tags: $ALL_TAGS"
-        echo "Dev tag: $DEV_TAG"
-        echo "Prod tag: $PROD_TAG"
         echo "Branch tag: $BRANCH_TAG"
+        echo "SHA tag: $SHA_TAG"
         
-        # Atualizar values-dev.yaml
-        if [ -n "$DEV_TAG" ]; then
-          sed -i "s/tag: \".*\"/tag: \"$DEV_TAG\"/" helm/saga-chart/values-dev.yaml
-          echo "Updated values-dev.yaml with tag: $DEV_TAG"
+        # Determinar qual arquivo values.yaml atualizar baseado na branch
+        CURRENT_BRANCH="${{ github.ref_name }}"
+        
+        if [ "$CURRENT_BRANCH" = "develop" ]; then
+          VALUES_FILE="helm/saga-chart/values-dev.yaml"
+          TAG_TO_USE="$SHA_TAG"
+        elif [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+          VALUES_FILE="helm/saga-chart/values-prod.yaml"
+          TAG_TO_USE="$SHA_TAG"
+        else
+          VALUES_FILE="helm/saga-chart/values.yaml"
+          TAG_TO_USE="$SHA_TAG"
         fi
         
-        # Atualizar values-prod.yaml
-        if [ -n "$PROD_TAG" ]; then
-          sed -i "s/tag: \".*\"/tag: \"$PROD_TAG\"/" helm/saga-chart/values-prod.yaml
-          echo "Updated values-prod.yaml with tag: $PROD_TAG"
+        echo "Updating $VALUES_FILE with tag: $TAG_TO_USE"
+        
+        # Atualizar o arquivo values.yaml correspondente
+        if [ -n "$TAG_TO_USE" ]; then
+          sed -i "s/tag: \".*\"/tag: \"$TAG_TO_USE\"/" "$VALUES_FILE"
+          echo "Updated $VALUES_FILE with tag: $TAG_TO_USE"
         fi
         
-        # Atualizar values.yaml base
-        if [ -n "$BRANCH_TAG" ]; then
-          sed -i "s/tag: \".*\"/tag: \"$BRANCH_TAG\"/" helm/saga-chart/values.yaml
-          echo "Updated values.yaml with tag: $BRANCH_TAG"
-        fi
-        
-        # Commit e push das mudanças (apenas se houver mudanças)
+        # Commit e push das mudanças (apenas se houver mudanças, pois tava disparando erro quando não tinha))
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add helm/saga-chart/values*.yaml
@@ -111,27 +111,10 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit - tags are already up to date"
         else
-          git commit -m "chore: update image tags - dev:$DEV_TAG, prod:$PROD_TAG, base:$BRANCH_TAG"
+          git commit -m "chore: update image tag to $TAG_TO_USE in $VALUES_FILE"
           git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           echo "Changes committed and pushed successfully"
         fi
-    - name: Make package public
-      if: github.event_name != 'pull_request'
-      run: |
-        # Tornar o pacote público no GHCR
-        PACKAGE_NAME=$(echo "${{ env.IMAGE_NAME }}" | cut -d'/' -f2)
-        echo "Making package $PACKAGE_NAME public..."
-        
-        # Usar a API do GitHub para tornar o pacote público
-        curl -X PATCH \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          "https://api.github.com/orgs/4bitlabs/packages/container/$PACKAGE_NAME" \
-          -d '{"visibility":"public"}'
-        
-        echo "Package $PACKAGE_NAME is now public!"
-
     - name: Notify deployment
       if: github.event_name != 'pull_request'
       run: |
