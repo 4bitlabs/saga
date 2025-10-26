@@ -37,7 +37,8 @@ app:
 # Database Configuration for Development
 database:
   enabled: true
-  host: "saga-api-dev-saga-chart-postgres-rw"
+  clusterName: "saga-chart-dev-postgres"
+  host: "saga-chart-dev-postgres-rw"
   port: 5432
   name: "sighas_dev"
   username: "admin"

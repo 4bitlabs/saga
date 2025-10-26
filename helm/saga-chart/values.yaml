@@ -6,7 +6,7 @@ app:
   name: "saga-api"
   packageName: "cacadores.ifal.sighas"
   replicaCount: 1
-  springProfile: "prod"
+  springProfile: "dev"
   debug: false
   
   image:
@@ -40,7 +40,8 @@ app:
 # Database Configuration
 database:
   enabled: true
-  host: "saga-chart-postgres"
+  clusterName: "saga-chart-postgres"
+  host: "saga-chart-postgres-rw"
   port: 5432
   name: "sighas"
   username: "admin"

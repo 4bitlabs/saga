@@ -34,12 +34,12 @@ spec:
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "saga-chart.fullname" . }}-db-secret
+                  name: {{ .Values.database.clusterName }}-db-secret
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "saga-chart.fullname" . }}-db-secret
+                  name: {{ .Values.database.clusterName }}-db-secret
                   key: password
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.app.springProfile | quote }}

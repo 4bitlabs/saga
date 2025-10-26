@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: {{ include "saga-chart.fullname" . }}-postgres
+  name: {{ .Values.database.clusterName }}
   labels:
     {{- include "saga-chart.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
@@ -20,7 +20,7 @@ spec:
       database: {{ .Values.database.name }}
       owner: {{ .Values.database.username }}
       secret:
-        name: {{ include "saga-chart.fullname" . }}-db-secret
+        name: {{ .Values.database.clusterName }}-db-secret
   
   storage:
     size: {{ .Values.database.storageSize }}
