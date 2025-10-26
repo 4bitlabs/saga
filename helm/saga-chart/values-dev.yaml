@@ -9,7 +9,7 @@ app:
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: Always
-    tag: "dev-latest"
+    tag: "develop-58fa993"
   
   service:
     type: ClusterIP
@@ -58,6 +58,6 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
-    tag: "dev-latest"
+    tag: "develop-58fa993"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
