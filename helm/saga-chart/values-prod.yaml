@@ -1,7 +1,7 @@
 # Production Environment Configuration
 app:
   name: "saga-api"
-  packageName: "cacadores.ifal.sighas"
+  packageName: "br.com.cacadoresti.saga"
   replicaCount: 3
   springProfile: "prod"
   debug: false
