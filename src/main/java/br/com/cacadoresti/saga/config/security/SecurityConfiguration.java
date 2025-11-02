@@ -48,7 +48,7 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs*/**", "/v1/auth").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs*/**", "/v1/auth", "/actuator/health/**", "/actuator/health").permitAll()
                 .anyRequest().authenticated()
             )
             .cors(Customizer.withDefaults())
