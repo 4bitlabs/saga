@@ -74,26 +74,36 @@ jobs:
         echo "Branch tag: $BRANCH_TAG"
         echo "SHA tag: $SHA_TAG"
         
-        # Determinar qual arquivo values.yaml atualizar baseado na branch
+        # Determinar quais arquivos values.yaml atualizar baseado na branch
         CURRENT_BRANCH="${{ github.ref_name }}"
         
+        # Sempre atualizar o values.yaml base para garantir que funcione sem especificar values file
+        BASE_VALUES_FILE="helm/saga-chart/values.yaml"
+        ENV_VALUES_FILE=""
+        
         if [ "$CURRENT_BRANCH" = "develop" ]; then
-          VALUES_FILE="helm/saga-chart/values-dev.yaml"
-          TAG_TO_USE="$SHA_TAG"
+          ENV_VALUES_FILE="helm/saga-chart/values-dev.yaml"
         elif [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
-          VALUES_FILE="helm/saga-chart/values-prod.yaml"
-          TAG_TO_USE="$SHA_TAG"
-        else
-          VALUES_FILE="helm/saga-chart/values.yaml"
-          TAG_TO_USE="$SHA_TAG"
+          ENV_VALUES_FILE="helm/saga-chart/values-prod.yaml"
         fi
         
-        echo "Updating $VALUES_FILE with tag: $TAG_TO_USE"
+        # Função para atualizar tags de imagem em um arquivo values.yaml
+        # Atualiza tanto app.image.tag quanto migration.image.tag
+        update_values_file() {
+          local file=$1
+          # Atualizar todas as tags de imagem (app e migration)
+          sed -i "s/tag: \".*\"/tag: \"$SHA_TAG\"/g" "$file"
+          echo "Updated all image tags in $file to $SHA_TAG"
+        }
         
-        # Atualizar o arquivo values.yaml correspondente
-        if [ -n "$TAG_TO_USE" ]; then
-          sed -i "s/tag: \".*\"/tag: \"$TAG_TO_USE\"/" "$VALUES_FILE"
-          echo "Updated $VALUES_FILE with tag: $TAG_TO_USE"
+        # Atualizar o values.yaml base sempre
+        if [ -n "$SHA_TAG" ]; then
+          update_values_file "$BASE_VALUES_FILE"
+        fi
+        
+        # Atualizar o arquivo específico do ambiente se aplicável
+        if [ -n "$ENV_VALUES_FILE" ] && [ -n "$SHA_TAG" ]; then
+          update_values_file "$ENV_VALUES_FILE"
         fi
         
         # Commit e push das mudanças (apenas se houver mudanças, pois tava disparando erro quando não tinha))
@@ -105,7 +115,13 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit - tags are already up to date"
         else
-          git commit -m "chore: update image tag to $TAG_TO_USE in $VALUES_FILE"
+          # Criar mensagem de commit apropriada
+          if [ -n "$ENV_VALUES_FILE" ]; then
+            COMMIT_MSG="chore: update image tags - base: $SHA_TAG, env: $SHA_TAG"
+          else
+            COMMIT_MSG="chore: update image tag to $SHA_TAG in values.yaml"
+          fi
+          git commit -m "$COMMIT_MSG"
           git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           echo "Changes committed and pushed successfully"
         fi
