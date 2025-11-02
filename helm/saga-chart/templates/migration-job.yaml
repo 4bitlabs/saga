@@ -25,7 +25,8 @@ spec:
             - "-jar"
             - "app.jar"
             - "--spring.profiles.active={{ .Values.app.springProfile }}"
-            - "--spring.flyway.migrate=true"
+            - "--spring.flyway.enabled=true"
+            - "--spring.main.web-application-type=none"
           env:
             - name: DB_HOST
               value: {{ .Values.database.host }}
