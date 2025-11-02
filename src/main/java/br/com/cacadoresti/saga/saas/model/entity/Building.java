@@ -44,3 +44,4 @@ public class Building implements Space {
         return EqualsBuilder.reflectionEquals(object, this);
     }
 }
+// trigger workflow
