@@ -44,6 +44,13 @@ spec:
                   key: password
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.app.springProfile | quote }}
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "file:/workspace/config/"
+          volumeMounts:
+            - name: config
+              mountPath: /workspace/config/application.properties
+              subPath: application.properties
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -64,5 +71,9 @@ spec:
             {{- toYaml .Values.app.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.app.securityContext | nindent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "saga-chart.fullname" . }}-config
       securityContext:
         {{- toYaml .Values.app.podSecurityContext | nindent 8 }}
