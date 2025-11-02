@@ -65,12 +65,6 @@ jobs:
     - name: Update Helm Chart values
       if: github.event_name != 'pull_request'
       run: |
-        # Aqui é só pra verificar se o commit não é de atualização automática, só por precaução mesmo, já que naturalmente esse workflow não observa modificações nos arquivos do folder helm
-        if [[ "${{ github.event.head_commit.message }}" == *"chore: update image tag"* ]]; then
-          echo "Skipping update - this is an automated tag update commit"
-          exit 0
-        fi
-        
         # Extrair as tags geradas
         ALL_TAGS="${{ steps.meta.outputs.tags }}"
         BRANCH_TAG=$(echo "$ALL_TAGS" | grep -E "^ghcr\.io/4bitlabs/saga:[a-zA-Z0-9-]+$" | head -n1 | sed 's/ghcr.io\/4bitlabs\/saga://')
