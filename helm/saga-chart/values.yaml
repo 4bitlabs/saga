@@ -12,7 +12,7 @@ app:
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: IfNotPresent
-    tag: "helm-and-workflow-cd1fd5e"
+    tag: "develop-f955be7"
   
   service:
     type: ClusterIP
@@ -61,6 +61,6 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
-    tag: "helm-and-workflow-cd1fd5e"
+    tag: "develop-f955be7"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
