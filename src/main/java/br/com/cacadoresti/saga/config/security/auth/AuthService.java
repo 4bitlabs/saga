@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 
 import br.com.cacadoresti.saga.config.security.auth.jwt.JwtDTO;
 import br.com.cacadoresti.saga.config.security.auth.jwt.JwtService;
@@ -12,6 +13,7 @@ import br.com.cacadoresti.saga.sagh.exception.auth.AuthenticationFailedException
 import br.com.cacadoresti.saga.sagh.model.dto.user.UserLoginDTO;
 
 @Service
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

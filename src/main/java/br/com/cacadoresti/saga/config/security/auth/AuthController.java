@@ -3,6 +3,7 @@ package br.com.cacadoresti.saga.config.security.auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import br.com.cacadoresti.saga.config.security.auth.jwt.JwtDTO;
 import br.com.cacadoresti.saga.sagh.model.dto.user.UserLoginDTO;
 
 @RestController
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RequestMapping("/v1/auth")
 @Tag(name = "Auth", description = "Endpoints for auth related services")
 public class AuthController {
