@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/component: migration
   annotations:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
+    
 spec:
   template:
     metadata:
@@ -16,6 +17,25 @@ spec:
         app.kubernetes.io/component: migration
     spec:
       restartPolicy: Never
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:17-alpine
+          env:
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_PORT
+              value: "{{ .Values.database.port }}"
+          command:
+            - sh
+            - -c
+            - |
+              echo "Aguardando PostgreSQL em ${DB_HOST}:${DB_PORT}..."
+              for i in $(seq 1 60); do
+                pg_isready -h "${DB_HOST}" -p "${DB_PORT}" -q && exit 0
+                echo "Ainda não pronto... tentativa $i"
+                sleep 2
+              done
+              echo "PostgreSQL não ficou pronto a tempo"; exit 1
       containers:
         - name: migration
           image: "{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
