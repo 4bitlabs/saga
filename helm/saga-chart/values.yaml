@@ -61,10 +61,6 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
-<<<<<<< HEAD
     tag: "main-c007cad"
-=======
-    tag: "main-c007cad"
->>>>>>> develop
   annotations:
     argocd.argoproj.io/sync-wave: "1"
