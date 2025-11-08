@@ -45,6 +45,7 @@ database:
   password: "best_possible_password_xd"
   postgresVersion: "17.6"
   storageSize: "50Gi"
+  storageClass: ""  # Empty string uses default StorageClass
   resources:
     limits:
       cpu: 1000m

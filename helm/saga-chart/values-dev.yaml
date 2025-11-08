@@ -45,6 +45,7 @@ database:
   password: "admin123"
   postgresVersion: "17.6"
   storageSize: "5Gi"
+  storageClass: ""  # Empty string uses default StorageClass
   resources:
     limits:
       cpu: 250m
