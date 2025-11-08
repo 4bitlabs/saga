@@ -8,12 +8,8 @@ metadata:
     app.kubernetes.io/component: migration
   annotations:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
-    
 spec:
-  selector:
-    matchLabels:
-      {{- include "saga-chart.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: migration
+  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
