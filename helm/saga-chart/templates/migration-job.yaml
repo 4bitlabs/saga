@@ -10,6 +10,10 @@ metadata:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
     
 spec:
+  selector:
+    matchLabels:
+      {{- include "saga-chart.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: migration
   template:
     metadata:
       labels:
