@@ -12,7 +12,11 @@ app:
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: IfNotPresent
+<<<<<<< HEAD
     tag: "main-01f2cbb"
+=======
+    tag: "develop-eac46bf"
+>>>>>>> develop
   
   service:
     type: ClusterIP
@@ -61,6 +65,10 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
+<<<<<<< HEAD
     tag: "main-01f2cbb"
+=======
+    tag: "develop-eac46bf"
+>>>>>>> develop
   annotations:
     argocd.argoproj.io/sync-wave: "1"

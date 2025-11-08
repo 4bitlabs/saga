@@ -8,8 +8,8 @@ metadata:
     app.kubernetes.io/component: migration
   annotations:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
-    
 spec:
+  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
