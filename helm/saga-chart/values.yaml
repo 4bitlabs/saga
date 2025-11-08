@@ -12,11 +12,7 @@ app:
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: IfNotPresent
-<<<<<<< HEAD
-    tag: "main-01f2cbb"
-=======
     tag: "develop-eac46bf"
->>>>>>> develop
   
   service:
     type: ClusterIP
