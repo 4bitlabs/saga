@@ -2,14 +2,14 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main, master, develop, helm-and-workflow ]
+    branches: [ main, master, develop ]
     paths:
       - 'src/**'
       - 'Dockerfile'
       - 'pom.xml'
       - '.github/workflows/docker-image.yml'
   pull_request:
-    branches: [ main, master, helm-and-workflow ]
+    branches: [ main, master ]
     paths:
       - 'src/**'
       - 'Dockerfile'
