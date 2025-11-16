@@ -19,12 +19,12 @@ echo "📦 Installed versions:"
 java -version 2>&1 | head -n 1
 mvn -version | head -n 1
 
+# Set executable permissions on mvnw
+chmod +x ./mvnw
+
 # Download Maven dependencies (speeds up first build)
 echo "📥 Downloading Maven dependencies..."
 ./mvnw dependency:go-offline -B || echo "⚠️  Some dependencies may need to be downloaded later"
-
-# Set executable permissions on mvnw
-chmod +x ./mvnw
 
 # Display database connection info
 echo ""
