@@ -9,7 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(info = @Info(title = "SAGA",
-		version = "1.0.0",
+		version = "1.0.1",
 		description = "Sistema Acadêmico de Gestão e Alocação"
 	)
 )
