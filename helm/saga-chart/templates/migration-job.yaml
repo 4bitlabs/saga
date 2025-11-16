@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "saga-chart.fullname" . }}-migration
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "saga-chart.labels" . | nindent 4 }}
     app.kubernetes.io/component: migration
