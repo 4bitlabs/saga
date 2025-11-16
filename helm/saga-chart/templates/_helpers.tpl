@@ -1,14 +1,14 @@
 {{/*
-Expand the name of the chart.
+Expande o nome do chart.
 */}}
 {{- define "saga-chart.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Cria um nome de aplicação totalmente qualificado padrão.
+Truncamos em 63 caracteres porque alguns campos de nome do Kubernetes são limitados a isso (pela especificação de nomenclatura DNS).
+Se o nome do release contiver o nome do chart, ele será usado como nome completo.
 */}}
 {{- define "saga-chart.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -24,14 +24,14 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
+Cria o nome e versão do chart como usado pelo label do chart.
 */}}
 {{- define "saga-chart.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Common labels
+Labels comuns
 */}}
 {{- define "saga-chart.labels" -}}
 helm.sh/chart: {{ include "saga-chart.chart" . }}
@@ -43,7 +43,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Labels de seletor
 */}}
 {{- define "saga-chart.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "saga-chart.name" . }}

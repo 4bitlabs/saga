@@ -7,29 +7,29 @@ metadata:
     app.kubernetes.io/component: application
 data:
   application.properties: |
-    # Spring Boot Configuration
+    # Configuração do Spring Boot
     server.port=8080
     spring.application.name={{ .Values.app.name }}
     
-    # Database Configuration
+    # Configuração do banco de dados
     spring.datasource.url=jdbc:postgresql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}
     spring.datasource.driver-class-name=org.postgresql.Driver
     
-    # JPA/Hibernate Configuration
+    # Configuração do JPA/Hibernate
     spring.jpa.hibernate.ddl-auto=none
     spring.jpa.show-sql={{ .Values.app.debug }}
     spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.properties.hibernate.format_sql=true
     
-    # Flyway Configuration
+    # Configuração do Flyway
     spring.flyway.enabled=true
     spring.flyway.locations=classpath:db/migration
     
-    # Actuator Configuration
+    # Configuração do Actuator
     management.endpoints.web.exposure.include=health,info,metrics
     management.endpoint.health.show-details=when-authorized
     management.health.db.enabled=true
     
-    # Logging Configuration
+    # Configuração de Logging
     logging.level.{{ .Values.app.packageName }}=INFO
     logging.level.org.springframework.security=DEBUG

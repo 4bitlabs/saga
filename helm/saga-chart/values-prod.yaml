@@ -1,4 +1,4 @@
-# Production Environment Configuration
+# Configuração do Ambiente de Produção
 app:
   name: "saga-api"
   packageName: "br.com.cacadoresti.saga"
@@ -34,7 +34,7 @@ app:
   podSecurityContext:
     fsGroup: 1000
 
-# Database Configuration for Production
+# Configuração do banco de dados para Produção
 database:
   enabled: true
   clusterName: "saga-chart-prod-postgres"
@@ -45,7 +45,7 @@ database:
   password: "best_possible_password_xd"
   postgresVersion: "17.6"
   storageSize: "50Gi"
-  storageClass: ""  # Empty string uses default StorageClass
+  storageClass: ""  # String vazia usa a StorageClass padrão
   resources:
     limits:
       cpu: "1" # 1 core completo (1000m = 1 core)
@@ -54,7 +54,7 @@ database:
       cpu: 500m
       memory: 512Mi
 
-# Migration Job Configuration
+# Configuração do Job de Migração
 migration:
   enabled: true
   image:
