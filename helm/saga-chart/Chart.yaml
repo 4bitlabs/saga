@@ -1,26 +1,24 @@
 apiVersion: v2
 name: saga-chart
-description: A Helm chart for Kubernetes
+description: Um chart Helm para Kubernetes
 
-# A chart can be either an 'application' or a 'library' chart.
+# Um chart pode ser um chart de 'aplicação' ou de 'biblioteca'.
 #
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
+# Charts de aplicação são uma coleção de templates que podem ser empacotados em arquivos versionados
+# para serem implantados.
 #
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+# Charts de biblioteca fornecem utilitários ou funções úteis para o desenvolvedor do chart. Eles são incluídos como
+# uma dependência de charts de aplicação para injetar esses utilitários e funções no pipeline de
+# renderização. Charts de biblioteca não definem nenhum template e, portanto, não podem ser implantados.
 type: application
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
+# Esta é a versão do chart. Este número de versão deve ser incrementado toda vez que você fizer alterações
+# no chart e seus templates, incluindo a versão do app.
+# As versões devem seguir o Semantic Versioning (https://semver.org/)
 version: 0.1.0
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
+# Este é o número de versão da aplicação sendo implantada. Este número de versão deve ser
+# incrementado toda vez que você fizer alterações na aplicação. As versões não precisam
+# seguir o Semantic Versioning. Elas devem refletir a versão que a aplicação está usando.
+# É recomendado usar com aspas.
 appVersion: "1.16.0"
-
-# test

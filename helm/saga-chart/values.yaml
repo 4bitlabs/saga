@@ -1,7 +1,7 @@
-# Default values for saga-chart
-# This is a YAML-formatted file.
+# Valores padrão para saga-chart
+# Este é um arquivo formatado em YAML.
 
-# Application Configuration
+# Configuração da Aplicação
 app:
   name: "saga-api"
   packageName: "br.com.cacadoresti.saga"
@@ -37,7 +37,7 @@ app:
   podSecurityContext:
     fsGroup: 1000
 
-# Database Configuration
+# Configuração do banco de dados
 database:
   enabled: true
   clusterName: "saga-chart-postgres"
@@ -48,7 +48,7 @@ database:
   password: "admin"
   postgresVersion: "17.6"
   storageSize: "10Gi"
-  storageClass: ""  # Empty string uses default StorageClass
+  storageClass: ""  # String vazia usa a StorageClass padrão
   resources:
     limits:
       cpu: 500m
@@ -57,7 +57,7 @@ database:
       cpu: 250m
       memory: 256Mi
 
-# Migration Job Configuration
+# Configuração do Job de Migração
 migration:
   enabled: true
   image:
