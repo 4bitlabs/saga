@@ -1,2 +1,22 @@
-/mvnw text eol=lf
+# Define line ending behavior for cross-platform compatibility
+* text=auto
+
+# Shell scripts must always use LF (required for Unix/Linux containers)
+*.sh text eol=lf
+.devcontainer/*.sh text eol=lf
+
+# Maven wrapper must use LF
+mvnw text eol=lf
+
+# Windows specific files must use CRLF
+*.bat text eol=crlf
 *.cmd text eol=crlf
+
+# Binary files should not be normalized
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
