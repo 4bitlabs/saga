@@ -48,7 +48,7 @@ database:
   storageClass: ""  # Empty string uses default StorageClass
   resources:
     limits:
-      cpu: 1000m
+      cpu: "1" # 1 core completo (1000m = 1 core)
       memory: 1Gi
     requests:
       cpu: 500m
