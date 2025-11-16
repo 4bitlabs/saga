@@ -1,0 +1,149 @@
+{
+  "name": "SAGA - Java Spring Boot",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      // VS Code extensions to install
+      "extensions": [
+        // Java Development
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vscjava.vscode-spring-initializr",
+        "vmware.vscode-spring-boot",
+        "vscjava.vscode-maven",
+        
+        // Lombok
+        "gabrielbb.vscode-lombok",
+        
+        // Database
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "ckolkman.vscode-postgres",
+        
+        // Docker & Kubernetes
+        "ms-azuretools.vscode-docker",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        
+        // YAML & Properties
+        "redhat.vscode-yaml",
+        "redhat.vscode-xml",
+        
+        // Git
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        
+        // REST Client
+        "humao.rest-client",
+        
+        // General Development
+        "editorconfig.editorconfig",
+        "streetsidesoftware.code-spell-checker",
+        "aaron-bond.better-comments"
+      ],
+      
+      // VS Code settings
+      "settings": {
+        "java.server.launchMode": "Standard",
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic",
+        "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+        "java.format.settings.profile": "GoogleStyle",
+        "files.exclude": {
+          "**/.classpath": true,
+          "**/.project": true,
+          "**/.settings": true,
+          "**/.factorypath": true
+        },
+        "sqltools.connections": [
+          {
+            "name": "PostgreSQL - SAGA Dev",
+            "driver": "PostgreSQL",
+            "previewLimit": 50,
+            "server": "postgres",
+            "port": 5432,
+            "database": "sighas",
+            "username": "admin",
+            "password": "admin"
+          }
+        ]
+      }
+    }
+  },
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "jdkDistro": "tem",
+      "installMaven": "true",
+      "mavenVersion": "3.9",
+      "installGradle": "false"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "none"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": false
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally
+  "forwardPorts": [8080, 5432],
+
+  // Port attributes
+  "portsAttributes": {
+    "5432": {
+      "label": "PostgreSQL Database",
+      "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "Spring Boot Application",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // Use 'postCreateCommand' to run commands after the container is created
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+
+  // Set environment variables
+  "remoteEnv": {
+    "ACTIVE_PROFILE": "dev",
+    "DB_HOST": "postgres",
+    "DB_PORT": "5432",
+    "DB_NAME": "sighas",
+    "DB_USERNAME": "admin",
+    "DB_PASSWORD": "admin",
+    // Override Spring Boot properties for devcontainer
+    "SPRING_FLYWAY_ENABLED": "true",
+    "SPRING_JPA_HIBERNATE_DDL_AUTO": "validate"
+  },
+
+  // Run as non-root user
+  "remoteUser": "vscode",
+  
+  // Container user
+  "containerUser": "vscode",
+
+  // Mount the project directory
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ]
+}
+
