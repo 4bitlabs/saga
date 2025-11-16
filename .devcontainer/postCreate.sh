@@ -43,9 +43,19 @@ echo "   Run tests:     ./mvnw test"
 echo "   Build JAR:     ./mvnw clean package"
 echo "   Build Docker:  docker build -t saga ."
 echo "   DB migrations: ./mvnw flyway:info"
-echo "   Swagger UI:    http://localhost:8080/swagger-ui.html"
+echo "   Swagger UI:    http://localhost:8080/swagger-ui/index.html"
 echo ""
 echo "📝 Note: Flyway migrations run automatically via Maven"
+echo ""
+
+# Verify Flyway is properly configured
+echo "🔍 Verifying Flyway configuration..."
+if [ "$SPRING_FLYWAY_ENABLED" = "true" ]; then
+  echo "✅ Flyway is ENABLED (migrations will run automatically)"
+  echo "   DDL Auto: $SPRING_JPA_HIBERNATE_DDL_AUTO"
+else
+  echo "⚠️  Flyway is DISABLED - migrations will not run!"
+fi
 echo ""
 
 echo "✨ Setup complete! Happy coding! 🎉"

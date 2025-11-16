@@ -129,7 +129,10 @@
     "DB_PORT": "5432",
     "DB_NAME": "sighas",
     "DB_USERNAME": "admin",
-    "DB_PASSWORD": "admin"
+    "DB_PASSWORD": "admin",
+    // Override Spring Boot properties for devcontainer
+    "SPRING_FLYWAY_ENABLED": "true",
+    "SPRING_JPA_HIBERNATE_DDL_AUTO": "validate"
   },
 
   // Run as non-root user
