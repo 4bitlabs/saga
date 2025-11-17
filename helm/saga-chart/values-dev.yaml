@@ -2,7 +2,7 @@
 app:
   name: "saga-api"
   packageName: "br.com.cacadoresti.saga"
-  replicaCount: 1
+  replicaCount: 10
   springProfile: "dev"
   debug: true
   
