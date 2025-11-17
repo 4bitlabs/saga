@@ -2,14 +2,14 @@
 app:
   name: "saga-api"
   packageName: "br.com.cacadoresti.saga"
-  replicaCount: 10
+  replicaCount: 1
   springProfile: "dev"
   debug: true
   
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: Always
-    tag: "develop-a0f0ddd"
+    tag: "develop-738d47f"
   
   service:
     type: ClusterIP
@@ -59,6 +59,6 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
-    tag: "develop-a0f0ddd"
+    tag: "develop-738d47f"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
