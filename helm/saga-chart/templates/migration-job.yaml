@@ -5,12 +5,16 @@ metadata:
   name: {{ include "saga-chart.fullname" . }}-migration
   # namespace: {{ .Release.Namespace }}
   labels:
-    # {{- include "saga-chart.labels" . | nindent 4 }}
+    {{- include "saga-chart.labels" . | nindent 4 }}
     app.kubernetes.io/component: migration
   annotations:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
 spec:
   ttlSecondsAfterFinished: 300
+  selector:
+    matchLabels:
+      {{- include "saga-chart.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: migration
   template:
     metadata:
       labels:
