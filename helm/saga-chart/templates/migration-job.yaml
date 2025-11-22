@@ -9,6 +9,9 @@ metadata:
     app.kubernetes.io/component: migration
   annotations:
     {{- toYaml .Values.migration.annotations | nindent 4 }}
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded,HookFailed
+    argocd.argoproj.io/sync-options: Replace=false
 spec:
   ttlSecondsAfterFinished: 300
   template:
