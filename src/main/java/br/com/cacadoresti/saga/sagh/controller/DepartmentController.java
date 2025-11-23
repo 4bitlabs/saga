@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cacadoresti.saga.sagh.model.dto.department.DepartmentRequestDTO;
 import br.com.cacadoresti.saga.sagh.model.dto.department.DepartmentResponseDTO;
@@ -24,8 +24,8 @@ import br.com.cacadoresti.saga.sagh.service.DepartmentService;
 import java.util.List;
 import java.util.UUID;
 
-// @RestController
-// @RequestMapping("/v1/departments")
+@RestController
+@RequestMapping("/v1/departments")
 @Tag(name = "Departments", description = "Endpoints for departments management")
 @SecurityRequirement(name = "jwtAuthentication")
 //TODO: Complete documentation
