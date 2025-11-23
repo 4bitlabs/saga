@@ -1,55 +1,21 @@
 # Configuração do Ambiente de Produção
+# Este arquivo sobrescreve apenas os valores que diferem do values.yaml padrão
+
 app:
-  name: "saga-api"
-  packageName: "br.com.cacadoresti.saga"
   replicaCount: 5
   springProfile: "prod"
-  debug: false
   
   image:
-    repository: "ghcr.io/4bitlabs/saga"
-    pullPolicy: IfNotPresent
     tag: "main-382384f"
-  
-  service:
-    type: ClusterIP
-    port: 80
-  
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    requests:
-      cpu: 500m
-      memory: 512Mi
-  
-  securityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    runAsUser: 1000
-    capabilities:
-      drop:
-        - ALL
-  
-  podSecurityContext:
-    fsGroup: 1000
 
 # Configuração do banco de dados para Produção
-# Nota: O banco de dados é gerenciado pelo chart postgres-chart separado
-# Estas são apenas as configurações de conexão para a aplicação
 database:
   clusterName: "saga-chart-prod-postgres"
   host: "saga-chart-prod-postgres-rw"
-  port: 5432
   name: "sighas_prod"
-  username: "admin"
   password: "best_possible_password_xd"
 
-# Configuração do Job de Migração
+# Configuração do Job de Migration
 migration:
-  enabled: true
   image:
-    repository: "ghcr.io/4bitlabs/saga"
     tag: "main-382384f"
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"

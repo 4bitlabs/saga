@@ -1,19 +1,14 @@
 # Configuração do Ambiente de Desenvolvimento
+# Este arquivo sobrescreve apenas os valores que diferem do values.yaml padrão
+
 app:
-  name: "saga-api"
-  packageName: "br.com.cacadoresti.saga"
   replicaCount: 3
   springProfile: "dev"
   debug: true
   
   image:
-    repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: Always
     tag: "develop-738d47f"
-  
-  service:
-    type: ClusterIP
-    port: 80
   
   resources:
     limits:
@@ -22,34 +17,15 @@ app:
     requests:
       cpu: 250m
       memory: 256Mi
-  
-  securityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    runAsUser: 1000
-    capabilities:
-      drop:
-        - ALL
-  
-  podSecurityContext:
-    fsGroup: 1000
 
 # Configuração do banco de dados para Desenvolvimento
-# Nota: O banco de dados é gerenciado pelo chart postgres-chart separado
-# Estas são apenas as configurações de conexão para a aplicação
 database:
   clusterName: "saga-chart-dev-postgres"
   host: "saga-chart-dev-postgres-rw"
-  port: 5432
   name: "sighas_dev"
-  username: "admin"
   password: "admin123"
 
 # Configuração do Job de Migration
 migration:
-  enabled: true
   image:
-    repository: "ghcr.io/4bitlabs/saga"
     tag: "develop-738d47f"
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
