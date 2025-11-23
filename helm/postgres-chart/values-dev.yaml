@@ -1,0 +1,20 @@
+# Configuração do Ambiente de Desenvolvimento
+clusterName: "saga-chart-dev-postgres"
+
+database:
+  name: "sighas_dev"
+  username: "admin"
+  password: "admin123"
+
+storage:
+  size: "5Gi"
+  storageClass: ""  # String vazia usa a StorageClass padrão
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 125m
+    memory: 128Mi
+

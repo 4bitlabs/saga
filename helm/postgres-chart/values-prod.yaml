@@ -1,0 +1,20 @@
+# Configuração do Ambiente de Produção
+clusterName: "saga-chart-prod-postgres"
+
+database:
+  name: "sighas_prod"
+  username: "admin"
+  password: "best_possible_password_xd"
+
+storage:
+  size: "50Gi"
+  storageClass: ""  # String vazia usa a StorageClass padrão
+
+resources:
+  limits:
+    cpu: "1" # 1 core completo (1000m = 1 core)
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+

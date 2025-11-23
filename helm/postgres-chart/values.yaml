@@ -1,0 +1,25 @@
+# Valores padrão para postgres-chart
+# Este é um arquivo formatado em YAML.
+
+# Nome do cluster PostgreSQL
+clusterName: "saga-chart-postgres"
+
+# Configuração do banco de dados
+database:
+  name: "sighas"
+  username: "admin"
+  password: "admin"
+
+# Configuração de armazenamento
+storage:
+  size: "10Gi"
+  storageClass: ""  # String vazia usa a StorageClass padrão
+
+# Recursos do cluster
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi

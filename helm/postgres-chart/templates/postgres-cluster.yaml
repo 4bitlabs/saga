@@ -1,0 +1,32 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.clusterName }}
+  labels:
+    {{- include "postgres-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  instances: 1
+  
+  postgresql:
+    parameters:
+      max_connections: "200"
+  
+  bootstrap:
+    initdb:
+      database: {{ .Values.database.name }}
+      owner: {{ .Values.database.username }}
+      secret:
+        name: {{ .Values.clusterName }}-db-secret
+  
+  storage:
+    size: {{ .Values.storage.size }}
+    {{- if and .Values.storage.storageClass (ne .Values.storage.storageClass "") }}
+    storageClass: {{ .Values.storage.storageClass }}
+    {{- end }}
+  
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
+

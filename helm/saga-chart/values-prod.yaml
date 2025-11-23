@@ -35,24 +35,15 @@ app:
     fsGroup: 1000
 
 # Configuração do banco de dados para Produção
+# Nota: O banco de dados é gerenciado pelo chart postgres-chart separado
+# Estas são apenas as configurações de conexão para a aplicação
 database:
-  enabled: true
   clusterName: "saga-chart-prod-postgres"
   host: "saga-chart-prod-postgres-rw"
   port: 5432
   name: "sighas_prod"
   username: "admin"
   password: "best_possible_password_xd"
-  postgresVersion: "17.6"
-  storageSize: "50Gi"
-  storageClass: ""  # String vazia usa a StorageClass padrão
-  resources:
-    limits:
-      cpu: "1" # 1 core completo (1000m = 1 core)
-      memory: 1Gi
-    requests:
-      cpu: 500m
-      memory: 512Mi
 
 # Configuração do Job de Migração
 migration:

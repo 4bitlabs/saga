@@ -35,24 +35,15 @@ app:
     fsGroup: 1000
 
 # Configuração do banco de dados para Desenvolvimento
+# Nota: O banco de dados é gerenciado pelo chart postgres-chart separado
+# Estas são apenas as configurações de conexão para a aplicação
 database:
-  enabled: true
   clusterName: "saga-chart-dev-postgres"
   host: "saga-chart-dev-postgres-rw"
   port: 5432
   name: "sighas_dev"
   username: "admin"
   password: "admin123"
-  postgresVersion: "17.6"
-  storageSize: "5Gi"
-  storageClass: ""  # String vazia usa a StorageClass padrão
-  resources:
-    limits:
-      cpu: 250m
-      memory: 256Mi
-    requests:
-      cpu: 125m
-      memory: 128Mi
 
 # Configuração do Job de Migration
 migration:
