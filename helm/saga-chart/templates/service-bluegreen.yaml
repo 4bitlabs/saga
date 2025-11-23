@@ -1,0 +1,41 @@
+{{- if and .Values.rollout.strategy (eq .Values.rollout.strategy "blueGreen") }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "saga-chart.fullname" . }}-active
+  labels:
+    {{- include "saga-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+    app.kubernetes.io/role: active
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "saga-chart.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "saga-chart.fullname" . }}-preview
+  labels:
+    {{- include "saga-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+    app.kubernetes.io/role: preview
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "saga-chart.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+{{- end }}
+

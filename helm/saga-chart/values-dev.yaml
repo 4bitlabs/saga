@@ -29,3 +29,11 @@ database:
 migration:
   image:
     tag: "develop-738d47f"
+
+# Configuração do Rollout para Dev (BlueGreen)
+rollout:
+  strategy: "blueGreen"
+  blueGreen:
+    # Auto-promoção desabilitada para permitir promoção manual
+    autoPromotionEnabled: false
+    scaleDownDelaySeconds: 30

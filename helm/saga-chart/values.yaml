@@ -56,3 +56,29 @@ migration:
     tag: "main-382384f"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+
+# Configuração do Rollout (Argo Rollouts)
+rollout:
+  # Estratégia de deployment: "blueGreen" ou "canary"
+  strategy: "blueGreen"
+  
+  # Configurações para BlueGreen
+  blueGreen:
+    # Auto-promoção desabilitada por padrão (requer promoção manual)
+    autoPromotionEnabled: false
+    # Delay antes de escalar down a versão antiga (em segundos)
+    scaleDownDelaySeconds: 30
+  
+  # Configurações para Canary
+  canary:
+    # Passos de incremento de tráfego
+    steps:
+      - setWeight: 10
+      - pause: {}
+      - setWeight: 25
+      - pause: {}
+      - setWeight: 50
+      - pause: {}
+      - setWeight: 75
+      - pause: {}
+      - setWeight: 100

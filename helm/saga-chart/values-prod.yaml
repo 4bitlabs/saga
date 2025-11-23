@@ -19,3 +19,19 @@ database:
 migration:
   image:
     tag: "main-382384f"
+
+# Configuração do Rollout para Prod (Canary)
+rollout:
+  strategy: "canary"
+  canary:
+    # Passos de incremento gradual de tráfego
+    steps:
+      - setWeight: 10
+      - pause: {}
+      - setWeight: 25
+      - pause: {}
+      - setWeight: 50
+      - pause: {}
+      - setWeight: 75
+      - pause: {}
+      - setWeight: 100

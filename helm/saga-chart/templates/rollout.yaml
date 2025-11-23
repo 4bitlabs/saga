@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ include "saga-chart.fullname" . }}-app
   labels:
@@ -77,3 +77,56 @@ spec:
             name: {{ include "saga-chart.fullname" . }}-config
       securityContext:
         {{- toYaml .Values.app.podSecurityContext | nindent 8 }}
+  strategy:
+    {{- if .Values.rollout.strategy }}
+    {{- if eq .Values.rollout.strategy "blueGreen" }}
+    blueGreen:
+      activeService: {{ include "saga-chart.fullname" . }}-active
+      previewService: {{ include "saga-chart.fullname" . }}-preview
+      {{- if .Values.rollout.blueGreen.autoPromotionEnabled }}
+      autoPromotionEnabled: {{ .Values.rollout.blueGreen.autoPromotionEnabled }}
+      {{- else }}
+      autoPromotionEnabled: false
+      {{- end }}
+      {{- if .Values.rollout.blueGreen.autoPromotionSeconds }}
+      autoPromotionSeconds: {{ .Values.rollout.blueGreen.autoPromotionSeconds }}
+      {{- end }}
+      {{- if .Values.rollout.blueGreen.scaleDownDelaySeconds }}
+      scaleDownDelaySeconds: {{ .Values.rollout.blueGreen.scaleDownDelaySeconds }}
+      {{- end }}
+      {{- if .Values.rollout.blueGreen.antiAffinity }}
+      antiAffinity:
+        {{- toYaml .Values.rollout.blueGreen.antiAffinity | nindent 8 }}
+      {{- end }}
+    {{- else if eq .Values.rollout.strategy "canary" }}
+    canary:
+      {{- if .Values.rollout.canary.steps }}
+      steps:
+        {{- toYaml .Values.rollout.canary.steps | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rollout.canary.trafficRouting }}
+      trafficRouting:
+        {{- if .Values.rollout.canary.trafficRouting.istio }}
+        istio:
+          {{- toYaml .Values.rollout.canary.trafficRouting.istio | nindent 10 }}
+        {{- end }}
+        {{- if .Values.rollout.canary.trafficRouting.nginx }}
+        nginx:
+          {{- toYaml .Values.rollout.canary.trafficRouting.nginx | nindent 10 }}
+        {{- end }}
+        {{- if .Values.rollout.canary.trafficRouting.smi }}
+        smi:
+          {{- toYaml .Values.rollout.canary.trafficRouting.smi | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.rollout.canary.analysis }}
+      analysis:
+        {{- toYaml .Values.rollout.canary.analysis | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rollout.canary.antiAffinity }}
+      antiAffinity:
+        {{- toYaml .Values.rollout.canary.antiAffinity | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+
