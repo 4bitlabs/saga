@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+// import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cacadoresti.saga.sagh.model.dto.course.CourseRequestDTO;
 import br.com.cacadoresti.saga.sagh.model.dto.course.CourseResponseDTO;
@@ -24,8 +24,8 @@ import br.com.cacadoresti.saga.sagh.service.CourseService;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/v1/courses")
+// @RestController
+// @RequestMapping("/v1/courses")
 @Tag(name = "Courses", description = "Endpoints for courses management")
 @SecurityRequirement(name = "jwtAuthentication")
 //TODO: Complete documentation
