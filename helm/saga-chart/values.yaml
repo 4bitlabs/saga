@@ -12,7 +12,7 @@ app:
   image:
     repository: "ghcr.io/4bitlabs/saga"
     pullPolicy: IfNotPresent
-    tag: "main-e8f5290"
+    tag: "develop-d63489d"
   
   service:
     type: ClusterIP
@@ -55,7 +55,7 @@ migration:
   enabled: true
   image:
     repository: "ghcr.io/4bitlabs/saga"
-    tag: "main-e8f5290"
+    tag: "develop-d63489d"
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 
