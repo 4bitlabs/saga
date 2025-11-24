@@ -2,13 +2,13 @@
 # Este arquivo sobrescreve apenas os valores que diferem do values.yaml padrão
 
 app:
-  replicaCount: 3
+  replicaCount: 5
   springProfile: "dev"
   debug: true
   
   image:
     pullPolicy: Always
-    tag: "develop-d101e1e"
+    tag: "develop-f3d20b0"
   
   resources:
     limits:
@@ -28,7 +28,7 @@ database:
 # Configuração do Job de Migration
 migration:
   image:
-    tag: "develop-d101e1e"
+    tag: "develop-f3d20b0"
 
 # Configuração do Rollout para Dev (BlueGreen)
 rollout:
