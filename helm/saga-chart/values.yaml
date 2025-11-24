@@ -18,13 +18,15 @@ app:
     type: ClusterIP
     port: 80
   
+  # Recursos reduzidos para evitar problemas de memória insuficiente
+  # Durante rollout canary, pods adicionais são criados temporariamente
   resources:
     limits:
       cpu: 1000m
-      memory: 1Gi
+      memory: 768Mi  # Reduzido de 1Gi para 768Mi
     requests:
       cpu: 500m
-      memory: 512Mi
+      memory: 384Mi  # Reduzido de 512Mi para 384Mi
   
   securityContext:
     allowPrivilegeEscalation: false
