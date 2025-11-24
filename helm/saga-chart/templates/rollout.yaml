@@ -7,9 +7,10 @@ metadata:
     app.kubernetes.io/component: application
   annotations:
     argocd.argoproj.io/sync-wave: "2"
-    # Não usar Replace para preservar o status do BlueGreen
+    # Não usar Replace e usar ServerSideApply para preservar o status do BlueGreen
     # Isso permite que o Argo Rollouts gerencie corretamente activeSelector e previewSelector
-    argocd.argoproj.io/sync-options: Replace=false
+    # ServerSideApply ajuda a preservar melhor o status durante atualizações do spec
+    argocd.argoproj.io/sync-options: Replace=false,ServerSideApply=true
 spec:
   replicas: {{ .Values.app.replicaCount }}
   selector:
