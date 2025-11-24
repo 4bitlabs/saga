@@ -8,7 +8,7 @@ app:
   
   image:
     pullPolicy: Always
-    tag: "develop-d101e1e"
+    tag: "develop-10bfc03"
   
   resources:
     limits:
@@ -28,7 +28,7 @@ database:
 # Configuração do Job de Migration
 migration:
   image:
-    tag: "develop-d101e1e"
+    tag: "develop-10bfc03"
 
 # Configuração do Rollout para Dev (BlueGreen)
 rollout:
