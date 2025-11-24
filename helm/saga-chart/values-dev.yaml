@@ -2,7 +2,7 @@
 # Este arquivo sobrescreve apenas os valores que diferem do values.yaml padrão
 
 app:
-  replicaCount: 5
+  replicaCount: 1
   springProfile: "dev"
   debug: true
   
