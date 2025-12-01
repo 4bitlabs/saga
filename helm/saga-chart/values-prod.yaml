@@ -6,7 +6,7 @@ app:
   springProfile: "prod"
   
   image:
-    tag: "main-b873961"
+    tag: "main-b2321e0"
 
 # Configuração do banco de dados para Produção
 database:
@@ -18,7 +18,7 @@ database:
 # Configuração do Job de Migration
 migration:
   image:
-    tag: "main-b873961"
+    tag: "main-b2321e0"
 
 # Configuração do Rollout para Prod (Canary)
 rollout:
